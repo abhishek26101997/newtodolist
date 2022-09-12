@@ -1,13 +1,37 @@
 
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {Task} from "./Task"
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [newTask,setNewTask] = useState("");
-  const handleChange =(event) => {
-    setNewTask(event.target.value);
-  };
+  
+  const [todoList,setTodoList]=useState(()=>{
+    const saved=localStorage.getItem('List')
+    const savedvalues=JSON.parse(saved)
+    return savedvalues
+  })
+  const [newTask,setNewTask]=useState('')
+  const handleChange=(e)=>{
+    setNewTask(e.target.value)
+    
+  }
+  
+  
+  
+  // useEffect(()=>{
+  //   const data=window.localStorage.getItem('List')
+  //   if (data!==null)
+  //    setTodoList(JSON.parse(data))
+  //  },[])
+  useEffect(()=>{
+    window.localStorage.setItem('List',JSON.stringify(todoList))
+  },[todoList])
+
+  useEffect(()=>{
+    const data=window.localStorage.getItem('List')
+    if (data!==null)
+     setTodoList(JSON.parse(data))
+     
+   },[])
   const addTask =() => {
     const task = {
       id: todoList.length === 0? 1 : todoList[todoList.length - 1].id +1,
